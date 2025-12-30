@@ -1,5 +1,6 @@
 import db
 from datetime import datetime,time,date
+import calendar
 import bcrypt
 
 def run_menu():
@@ -189,16 +190,35 @@ def run_menu():
                             compute(entry_date,exit_date)
                         elif(choice==2):
                             for i in range(1,13):
-                                if(i==2):
-                                    entry_date = datetime(2025, 2, 1, 0, 0, 0)
-                                    exit_date   = datetime(2025, 2, 28, 23, 59, 59)
-                                else:
-                                    entry_date = datetime(2025, i, 1, 0, 0, 0)
-                                    exit_date   = datetime(2025, i, 31, 23, 59, 59)
+                                entry_date = datetime(2025, 1, 1, 0, 0, 0)
+                                last_day=calendar.monthrange(2025,i)[1]
+                                exit_date=datetime(2025,i,last_day,23,59,59)
                                 compute(entry_date,exit_date)
-                        elif(choice==3):                            
+                        elif(choice==3):    
+                            current_month=datetime.now().month
+                            entry_date = datetime(2025, 1, 1, 0, 0, 0)
+                            last_day=calendar.monthrange(2025,current_month)[1]
+                            exit_date=datetime(2025,current_month,last_day,23,59,59)
                             compute(entry_date,exit_date)
                         elif(choice==4):
+                            def validate_date_input(prompt):
+                                user_input = input(prompt).strip()
+
+                                # Empty input check
+                                if not user_input:
+                                    raise ValueError("Date cannot be empty.")
+
+                                # Format + calendar date validation
+                                try:
+                                    parsed_date = datetime.strptime(user_input, "%Y-%m-%d").date()
+                                except ValueError:
+                                    raise ValueError("Invalid date format. Use YYYY-MM-DD.")
+
+                                # Future date validation 
+                                if parsed_date > date.today():
+                                    raise ValueError("Date cannot be in the future.")
+
+                                return parsed_date
                             try:
                                 # Validate inputs
                                 entry_date = validate_date_input("Enter entry date (YYYY-MM-DD): ")
@@ -230,6 +250,7 @@ def run_menu():
                                 print(f"Unexpected Error: {e}")
                         else:
                             print("exiting...")
+                            break
             if(isFound==0):
                 print("no found...")
 
