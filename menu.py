@@ -6,8 +6,8 @@ import bcrypt
 def run_menu():
     # max_cars=int(input("Enter cars capacity for parking:"))
     # max_bikes=int(input("Enter bikes capacity for parking:"))
-    max_cars=5
-    max_bikes=5
+    max_cars=15
+    max_bikes=15
     cars_parked=db.no_parked_cars()
     bikes_parked=db.no_parked_bikes()
 
@@ -185,20 +185,23 @@ def run_menu():
                         print("MENU: 1.Annual Revenue 2.Monthly Revenue 3.Current Month Revenue 4.Custom Revenue 5.Exit")
                         choice=int(input("Enter your choice:"))   
                         if(choice==1):
-                            entry_date = datetime(2025, 1, 1, 0, 0, 0)
-                            exit_date   = datetime(2025, 12, 31, 23, 59, 59)
+                            current_year=datetime.now().year
+                            entry_date = datetime(current_year, 1, 1, 0, 0, 0)
+                            exit_date   = datetime(current_year, 12, 31, 23, 59, 59)
                             compute(entry_date,exit_date)
                         elif(choice==2):
+                            current_year=datetime.now().year
                             for i in range(1,13):
-                                entry_date = datetime(2025, 1, 1, 0, 0, 0)
-                                last_day=calendar.monthrange(2025,i)[1]
-                                exit_date=datetime(2025,i,last_day,23,59,59)
+                                entry_date = datetime(current_year, 1, 1, 0, 0, 0)
+                                last_day=calendar.monthrange(current_year,i)[1]
+                                exit_date=datetime(current_year,i,last_day,23,59,59)
                                 compute(entry_date,exit_date)
                         elif(choice==3):    
                             current_month=datetime.now().month
+                            current_year=datetime.now().year
                             entry_date = datetime(2025, 1, 1, 0, 0, 0)
-                            last_day=calendar.monthrange(2025,current_month)[1]
-                            exit_date=datetime(2025,current_month,last_day,23,59,59)
+                            last_day=calendar.monthrange(current_year,current_month)[1]
+                            exit_date=datetime(current_year,current_month,last_day,23,59,59)
                             compute(entry_date,exit_date)
                         elif(choice==4):
                             def validate_date_input(prompt):
@@ -263,7 +266,6 @@ def run_menu():
             salt = bcrypt.gensalt()
             # Hashing the password
             hash = bcrypt.hashpw(bytes, salt)
-
             isFound=0
             admins=db.get_admins()
             for admin in admins:
